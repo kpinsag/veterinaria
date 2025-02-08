@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Videojuego</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --blue: #4A90E2;
+            /* Azul */
+            --darkBlue: #1E3A8A;
+            /* Azul oscuro */
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+
+    <!-- Sidebar -->
+    <div class="sidebar bg-[var(--darkBlue)] text-white p-6 fixed h-full w-64">
+        <h2 class="text-2xl font-bold mb-6 text-center">Videojuegos</h2>
+        <ul class="space-y-4">
+            <li>
+                <a href="index.html" class="text-white hover:text-[var(--blue)]">🏠 Inicio</a>
+            </li>
+            <li>
+                <a href="gestion.html" class="text-white hover:text-[var(--blue)]">🎮 Gestión de Juegos</a>
+            </li>
+            <li>
+                <a href="personajes.html" class="text-white hover:text-[var(--blue)]">👾 Personajes y Skins</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Content -->
+    <div class="content p-6 ml-64 w-full">
+        <h1 class="text-4xl font-bold text-[var(--blue)] mb-6">Super Battle</h1>
+        <p class="text-lg text-gray-700 mb-4">Un juego de acción donde peleas contra robots en diferentes niveles.</p>
+
+        <h2 class="text-2xl font-semibold text-[var(--blue)] mb-4">Instrucciones</h2>
+        <ul class="list-disc pl-5 text-gray-700">
+            <li>Usa las flechas para moverte.</li>
+            <li>Presiona "X" para atacar.</li>
+            <li>Presiona "Z" para saltar.</li>
+        </ul>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publicaciones</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --peach: #fdf8f5;
+            /* Durazno */
+            --orange: #FF8C42;
+            /* Naranja */
+            --darkOrange: #E76F24;
+            /* Naranja oscuro */
+            --facebookBlue: #1877f2;
+        }
+
+        .sidebar {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar a {
+            transition: color 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            color: var(--darkOrange);
+        }
+
+        .sidebar .menu-item:hover {
+            background-color: rgba(255, 140, 66, 0.2);
+            border-radius: 8px;
+        }
+
+        .sidebar .menu-item {
+            padding: 12px 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .post-area {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+            background-color: #fff;
+        }
+
+        .post-area input,
+        .post-area textarea {
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            width: 100%;
+        }
+
+        .post-area textarea {
+            height: 100px;
+        }
+
+        .post-area button {
+            background-color: var(--facebookBlue);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .post-area button:hover {
+            background-color: #1568b0;
+        }
+
+        /* Estilo de las tarjetas de publicación */
+        .post-card {
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            margin-bottom: 20px;
+            padding: 20px;
+            transition: transform 0.2s ease;
+        }
+
+        .post-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .post-card h3 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .post-card p {
+            font-size: 1rem;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .post-card .category {
+            font-size: 0.875rem;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .post-card .date {
+            font-size: 0.75rem;
+            color: #aaa;
+            margin-top: 10px;
+        }
+
+        .post-actions {
+            margin-top: 10px;
+        }
+
+        .post-actions button {
+            font-size: 0.875rem;
+            padding: 6px 12px;
+            margin-right: 8px;
+            border-radius: 8px;
+        }
+
+        .post-actions .edit-btn {
+            background-color: #FFB84D;
+            color: white;
+        }
+
+        .post-actions .delete-btn {
+            background-color: #E76F24;
+            color: white;
+        }
+    </style>
+</head>
+
+<body class="bg-[var(--peach)] font-sans flex">
+
+    <!-- Sidebar -->
+    <div class="sidebar bg-[var(--orange)] text-white p-6 fixed h-full w-64 shadow-lg">
+        <h2 class="text-2xl font-bold mb-6 text-center text-white">Red Social</h2>
+        <ul class="space-y-4">
+            <li class="menu-item">
+                <a href="index.html" class="text-white">🏠 Inicio</a>
+            </li>
+            <li class="menu-item">
+                <a href="users.html" class="text-white">👤 Usuarios</a>
+            </li>
+            <li class="menu-item">
+                <a href="friends.html" class="text-white">🤝 Amigos</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Content -->
+    <div class="content p-6 ml-64 w-full flex-grow">
+        <h1 class="text-4xl font-bold text-[var(--orange)] mb-6">Publicaciones</h1>
+        <button onclick="showCreatePostModal()"
+            class="bg-[var(--orange)] text-white px-6 py-3 rounded-md mb-4 hover:bg-[var(--darkOrange)]">➕ Nueva
+            Publicación</button>
+
+        <!-- Lista de Publicaciones -->
+        <div id="postsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+        <!-- Modal para crear o editar publicación -->
+        <div id="postModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+            <div class="bg-white p-6 rounded-lg w-1/3 shadow-lg">
+                <h2 class="text-2xl mb-4" id="modalTitle">Crear Publicación</h2>
+                <div class="post-area">
+                    <input type="text" id="postName" placeholder="Nombre de la Publicación"
+                        class="w-full mb-4" />
+                    <textarea id="postContent" placeholder="¿Qué estás pensando?"
+                        class="w-full mb-4"></textarea>
+                    <input type="text" id="postCategory" placeholder="Categoría" class="w-full mb-4" />
+                    <input type="date" id="postDate" class="w-full mb-4" />
+                    <button onclick="savePost()" id="saveBtn">Publicar</button>
+                </div>
+                <button onclick="closeModal()"
+                    class="ml-2 px-6 py-3 bg-red-500 text-white rounded-md hover:bg-red-400">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let editingPostIndex = null;
+
+        // Cargar publicaciones desde localStorage al inicio
+        function loadPosts() {
+            const posts = JSON.parse(localStorage.getItem('posts')) || [];
+            const postsList = document.getElementById('postsList');
+            postsList.innerHTML = '';
+
+            posts.forEach((post, index) => {
+                const postElement = document.createElement('div');
+                postElement.className = 'post-card';
+                postElement.innerHTML = `
+                    <h3 class="text-xl font-semibold">${post.name}</h3>
+                    <p class="text-lg">${post.content}</p>
+                    <p class="category">Categoría: ${post.category}</p>
+                    <p class="date">Fecha de Publicación: ${post.date}</p>
+                    <div class="post-actions">
+                        <button onclick="editPost(${index})" class="edit-btn">✏️ Editar</button>
+                        <button onclick="deletePost(${index})" class="delete-btn">🗑️ Eliminar</button>
+                    </div>
+                `;
+                postsList.appendChild(postElement);
+            });
+        }
+
+        // Mostrar modal para crear una nueva publicación
+        function showCreatePostModal() {
+            document.getElementById('postModal').classList.remove('hidden');
+            document.getElementById('modalTitle').innerText = 'Crear Publicación';
+            document.getElementById('postName').value = '';
+            document.getElementById('postContent').value = '';
+            document.getElementById('postCategory').value = '';
+            document.getElementById('postDate').value = '';
+            document.getElementById('saveBtn').innerText = 'Publicar';
+            editingPostIndex = null;
+        }
+
+        // Mostrar modal para editar una publicación
+        function editPost(index) {
+            const posts = JSON.parse(localStorage.getItem('posts')) || [];
+            const post = posts[index];
+            document.getElementById('postName').value = post.name;
+            document.getElementById('postContent').value = post.content;
+            document.getElementById('postCategory').value = post.category;
+            document.getElementById('postDate').value = post.date;
+            document.getElementById('modalTitle').innerText = 'Editar Publicación';
+            document.getElementById('saveBtn').innerText = 'Actualizar';
+            editingPostIndex = index;
+            document.getElementById('postModal').classList.remove('hidden');
+        }
+
+        // Guardar o actualizar la publicación
+        function savePost() {
+            const name = document.getElementById('postName').value;
+            const content = document.getElementById('postContent').value;
+            const category = document.getElementById('postCategory').value;
+            const date = document.getElementById('postDate').value;
+
+            if (!name || !content || !category || !date) {
+                alert('Por favor, completa todos los campos');
+                return;
+            }
+
+            const posts = JSON.parse(localStorage.getItem('posts')) || [];
+
+            if (editingPostIndex !== null) {
+                posts[editingPostIndex] = { name, content, category, date };
+            } else {
+                posts.push({ name, content, category, date });
+            }
+
+            localStorage.setItem('posts', JSON.stringify(posts));
+            loadPosts();
+            closeModal();
+        }
+
+        // Eliminar publicación
+        function deletePost(index) {
+            const posts = JSON.parse(localStorage.getItem('posts')) || [];
+            posts.splice(index, 1);
+            localStorage.setItem('posts', JSON.stringify(posts));
+            loadPosts();
+        }
+
+        // Cerrar modal
+        function closeModal() {
+            document.getElementById('postModal').classList.add('hidden');
+        }
+
+        // Cargar publicaciones al inicio
+        loadPosts();
+    </script>
+
+</body>
+
+</html>

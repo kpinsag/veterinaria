@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stock y Vencimientos | Inventario</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome para iconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: "#ff7f00",
+            light: "#ffae42",
+            dark: "#cc6600",
+            background: "#F5F5F5",
+            success: "#10B981",
+            warning: "#F59E0B",
+            danger: "#EF4444"
+          },
+          boxShadow: {
+            'card': '0 4px 8px rgba(0, 0, 0, 0.1)',
+            'hover-card': '0 10px 20px rgba(0, 0, 0, 0.15)',
+            'sidebar': '4px 0 15px rgba(0, 0, 0, 0.1)'
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-background font-sans flex">
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="w-64 bg-brand text-white flex flex-col h-screen shadow-sidebar transition-all duration-300 ease-in-out">
+    <div class="p-6">
+      <h2 class="text-2xl font-bold flex items-center gap-3">
+        <i class="fas fa-bell"></i>
+        <span class="sidebar-text">Inventario</span>
+      </h2>
+    </div>
+
+    <nav class="flex-1 px-4">
+      <h3 class="text-sm font-semibold text-brand-light mb-3 sidebar-text">SECCIONES</h3>
+      <ul class="space-y-3">
+        <li><a href="./productos.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/20"><i class="fas fa-box-open w-5 text-center"></i> Productos</a></li>
+        <li><a href="./movimientos.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/20"><i class="fas fa-exchange-alt w-5 text-center"></i> Movimientos</a></li>
+        <li><a href="./stock.html" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-white text-brand"><i class="fas fa-bell w-5 text-center"></i> Stock y Vencimientos</a></li>
+      </ul>
+    </nav>
+
+    <div class="p-6 mt-auto">
+      <a href="/modules/veterinaria-admin/pages/core/dashboard.html" class="w-full flex items-center gap-2 bg-white/10 hover:bg-white/20 text-sm px-4 py-3 rounded-lg transition-all">
+        <i class="fas fa-arrow-left"></i> Volver al Dashboard
+      </a>
+    </div>
+  </aside>
+
+  <!-- Contenido Principal -->
+  <main class="flex-1 p-8">
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-800">Alertas de Stock y Vencimientos</h1>
+      <p class="text-gray-600">Monitorea productos con bajo stock o próximos a vencer</p>
+    </header>
+
+    <!-- Alertas de stock bajo -->
+    <section class="bg-white p-6 rounded-xl shadow-card mb-8">
+      <h2 class="text-xl font-semibold text-gray-700 mb-4"><i class="fas fa-exclamation-triangle mr-2 text-warning"></i> Productos con Bajo Stock</h2>
+      <div id="lowStockList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </section>
+
+    <!-- Alertas de vencimiento -->
+    <section class="bg-white p-6 rounded-xl shadow-card">
+      <h2 class="text-xl font-semibold text-gray-700 mb-4"><i class="fas fa-hourglass-end mr-2 text-danger"></i> Productos Próximos a Vencer</h2>
+      <div id="expiringProductsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </section>
+  </main>
+
+  <script>
+    let products = JSON.parse(localStorage.getItem("products")) || [];
+
+    function checkLowStock() {
+      const container = document.getElementById("lowStockList");
+      container.innerHTML = "";
+      const lowStockProducts = products.filter(p => p.stock < 10);
+      if (lowStockProducts.length === 0) {
+        container.innerHTML = "<p class='text-gray-600'>No hay productos con bajo stock.</p>";
+        return;
+      }
+      lowStockProducts.forEach(product => {
+        container.innerHTML += `
+          <div class="bg-warning/20 p-4 rounded-lg shadow flex justify-between items-center">
+            <h3 class="text-lg font-semibold">${product.name}</h3>
+            <p class="text-sm text-warning">Stock: ${product.stock}</p>
+          </div>
+        `;
+      });
+    }
+
+    function checkExpiringProducts() {
+      const container = document.getElementById("expiringProductsList");
+      container.innerHTML = "";
+      const today = new Date();
+      const expiringProducts = products.filter(p => {
+        if (!p.expiration) return false;
+        const expirationDate = new Date(p.expiration);
+        const diffDays = Math.ceil((expirationDate - today) / (1000 * 60 * 60 * 24));
+        return diffDays <= 30; // Productos que vencen en menos de 30 días
+      });
+      if (expiringProducts.length === 0) {
+        container.innerHTML = "<p class='text-gray-600'>No hay productos próximos a vencer.</p>";
+        return;
+      }
+      expiringProducts.forEach(product => {
+        container.innerHTML += `
+          <div class="bg-danger/20 p-4 rounded-lg shadow flex justify-between items-center">
+            <h3 class="text-lg font-semibold">${product.name}</h3>
+            <p class="text-sm text-danger">Vence: ${product.expiration}</p>
+          </div>
+        `;
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      checkLowStock();
+      checkExpiringProducts();
+    });
+  </script>
+</body>
+</html>

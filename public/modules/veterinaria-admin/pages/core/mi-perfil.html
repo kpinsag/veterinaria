@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Perfil | Veterinaria</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome CDN (para iconos) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <!-- Configuración de Tailwind (colores de marca, animaciones) -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: "#ff7f00", 
+              light: "#ffae42",   
+              dark: "#cc6600"     
+            },
+            white: "#ffffff"
+          },
+          animation: {
+            'bounce-slow': 'bounce 3s infinite'
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-white font-sans min-h-screen">
+
+  <!-- HEADER ESTILO DASHBOARD -->
+  <nav class="bg-brand p-4 text-white flex justify-between items-center shadow-lg sticky top-0 z-50">
+    <!-- Izquierda: Título con Ícono Animado -->
+    <div class="flex items-center space-x-3">
+      <h1 class="text-2xl font-bold flex items-center">
+        <i class="fas fa-user-circle text-3xl mr-2 animate-bounce-slow"></i>
+        Mi Perfil
+      </h1>
+    </div>
+
+    <!-- Derecha: Navegación + Botón Salir -->
+    <div class="flex items-center space-x-4">
+      <a href="dashboard.html" class="hover:underline flex items-center">
+        <i class="fas fa-home mr-1"></i>Dashboard
+      </a>
+      <a href="mi-veterinaria.html" class="hover:underline flex items-center">
+        <i class="fas fa-hospital mr-1"></i>Mi Veterinaria
+      </a>
+      <button 
+        class="bg-white text-brand px-4 py-2 rounded hover:bg-gray-200 transition flex items-center"
+        onclick="window.location.href='login.html'"
+      >
+        <i class="fas fa-sign-out-alt mr-2"></i>Salir
+      </button>
+    </div>
+  </nav>
+
+  <!-- CONTENEDOR PRINCIPAL -->
+  <main class="container mx-auto mt-10 px-4">
+
+    <section class="bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
+      
+      <!-- ENCABEZADO DE PERFIL -->
+      <div class="flex flex-col items-center md:flex-row md:items-start md:space-x-6">
+        <!-- Foto / Avatar -->
+        <img 
+          id="userAvatar"
+          src="https://cdn-icons-png.flaticon.com/512/219/219983.png" 
+          alt="Foto de Usuario" 
+          class="w-28 h-28 rounded-full mb-4 md:mb-0 object-cover shadow-md"
+        />
+
+        <!-- Nombre y Email -->
+        <div class="text-center md:text-left">
+          <h2 class="text-2xl font-bold text-gray-700 mb-1" id="userName">Usuario Admin</h2>
+          <p class="text-gray-600 mb-4" id="userEmail">admin@tuveterinaria.com</p>
+        </div>
+      </div>
+
+      <hr class="my-6 border-gray-200" />
+
+      <!-- FORMULARIO DE DATOS DEL USUARIO -->
+      <form id="userProfileForm" class="space-y-6">
+        <!-- Grid para dos columnas en pantallas medianas/grandes -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <div>
+            <label for="profileName" class="block font-semibold text-gray-700 mb-1">
+              Nombre Completo <span class="text-red-500">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="profileName" 
+              class="w-full p-2 border rounded focus:ring-2 focus:ring-brand-dark text-gray-700"
+              placeholder="Ej: Dr. Admin" 
+              required
+            />
+          </div>
+
+          <div>
+            <label for="profileEmail" class="block font-semibold text-gray-700 mb-1">
+              Correo Electrónico <span class="text-red-500">*</span>
+            </label>
+            <input 
+              type="email" 
+              id="profileEmail"
+              class="w-full p-2 border rounded focus:ring-2 focus:ring-brand-dark text-gray-700"
+              required
+            />
+          </div>
+
+          <div>
+            <label for="profilePhone" class="block font-semibold text-gray-700 mb-1">
+              Teléfono
+            </label>
+            <input 
+              type="text" 
+              id="profilePhone"
+              class="w-full p-2 border rounded focus:ring-2 focus:ring-brand-dark text-gray-700"
+              placeholder="3001234567"
+            />
+          </div>
+
+          <div>
+            <label for="profileRole" class="block font-semibold text-gray-700 mb-1">
+              Rol <span class="text-red-500">*</span>
+            </label>
+            <select 
+              id="profileRole" 
+              class="w-full p-2 border rounded focus:ring-2 focus:ring-brand-dark text-gray-700"
+              required
+            >
+              <option value="Propietario">Propietario</option>
+              <option value="Administrador">Administrador</option>
+              <option value="Veterinario">Veterinario</option>
+              <option value="Asistente">Asistente</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="profilePass" class="block font-semibold text-gray-700 mb-1">
+              Contraseña <span class="text-red-500">*</span>
+            </label>
+            <input 
+              type="password" 
+              id="profilePass"
+              class="w-full p-2 border rounded focus:ring-2 focus:ring-brand-dark text-gray-700"
+              placeholder="••••••"
+              required
+            />
+          </div>
+
+          <div>
+            <label for="profileBio" class="block font-semibold text-gray-700 mb-1">
+              Biografía / Descripción
+            </label>
+            <textarea
+              id="profileBio"
+              class="w-full p-2 border rounded focus:ring-2 focus:ring-brand-dark text-gray-700 h-24"
+              placeholder="Breve descripción de tu experiencia o rol..."
+            ></textarea>
+          </div>
+
+        </div>
+
+        <!-- BOTONES DE ACCIÓN -->
+        <div class="flex items-center justify-between mt-4">
+          <button 
+            type="submit" 
+            class="bg-brand text-white px-6 py-2 rounded hover:bg-brand-dark transition font-semibold"
+          >
+            <i class="fas fa-save mr-1"></i>Guardar Cambios
+          </button>
+          <button 
+            type="button" 
+            id="deleteAccountBtn" 
+            class="bg-red-500 text-white px-6 py-2 rounded hover:bg-red-700 transition font-semibold"
+          >
+            <i class="fas fa-user-slash mr-1"></i>Eliminar Cuenta
+          </button>
+        </div>
+      </form>
+
+      <!-- BOTÓN Y TABLA PARA VER HISTORIAL DE CAMBIOS -->
+      <div class="mt-6">
+        <button 
+          id="toggleHistoryBtn" 
+          class="bg-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-400 transition"
+        >
+          Ver Historial de Cambios
+        </button>
+
+        <div id="profileHistory" class="hidden w-full mt-4 overflow-x-auto">
+          <h3 class="text-lg font-bold text-gray-700 mb-2">Historial de Cambios</h3>
+          <table class="min-w-full border">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="px-4 py-2 border">Fecha</th>
+                <th class="px-4 py-2 border">Cambios Realizados</th>
+              </tr>
+            </thead>
+            <tbody id="profileHistoryBody" class="text-sm text-gray-700">
+              <!-- Se inyectan filas dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- SCRIPTS LÓGICA PERFIL -->
+  <script>
+    const userProfileForm = document.getElementById('userProfileForm');
+    const deleteAccountBtn = document.getElementById('deleteAccountBtn');
+    const toggleHistoryBtn = document.getElementById('toggleHistoryBtn');
+    const profileHistory = document.getElementById('profileHistory');
+    const profileHistoryBody = document.getElementById('profileHistoryBody');
+
+    // Elementos para mostrar en la vista superior
+    const userName = document.getElementById('userName');
+    const userEmail = document.getElementById('userEmail');
+
+    // Almacenamiento principal
+    let userData = {};
+    // Historial de cambios (array en localStorage)
+    let userProfileHistory = [];
+
+    // Cargar datos
+    document.addEventListener('DOMContentLoaded', () => {
+      loadUserProfile();
+      loadHistory();
+    });
+
+    function loadUserProfile() {
+      const storedData = JSON.parse(localStorage.getItem('userProfile'));
+      if(storedData) {
+        userData = storedData;
+        userName.innerText = userData.nombre || "Usuario Admin";
+        userEmail.innerText = userData.email || "admin@tuveterinaria.com";
+
+        document.getElementById('profileName').value = userData.nombre || "";
+        document.getElementById('profileEmail').value = userData.email || "";
+        document.getElementById('profilePhone').value = userData.telefono || "";
+        document.getElementById('profileRole').value = userData.rol || "Propietario";
+        document.getElementById('profilePass').value = ""; // No mostrar la contraseña
+        document.getElementById('profileBio').value = userData.bio || "";
+      }
+    }
+
+    function loadHistory() {
+      const storedHistory = JSON.parse(localStorage.getItem('userProfileHistory'));
+      if(storedHistory) {
+        userProfileHistory = storedHistory;
+      }
+    }
+
+    // Guardar cambios en LocalStorage
+    userProfileForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      // Datos anteriores
+      const oldData = {...userData};
+
+      // Datos nuevos
+      userData = {
+        nombre: document.getElementById('profileName').value.trim(),
+        email: document.getElementById('profileEmail').value.trim(),
+        telefono: document.getElementById('profilePhone').value.trim(),
+        rol: document.getElementById('profileRole').value.trim(),
+        // OJO: Contraseña en texto plano es solo ejemplo
+        password: document.getElementById('profilePass').value.trim(),
+        bio: document.getElementById('profileBio').value.trim()
+      };
+
+      localStorage.setItem('userProfile', JSON.stringify(userData));
+
+      // Actualizamos la vista superior
+      userName.innerText = userData.nombre || "Usuario Admin";
+      userEmail.innerText = userData.email || "admin@tuveterinaria.com";
+
+      // Generar registro de cambio
+      generateHistoryEntry(oldData, userData);
+
+      alert("Perfil actualizado correctamente");
+    });
+
+    // Generar entrada en el historial
+    function generateHistoryEntry(oldD, newD) {
+      let changes = [];
+      for(let key in newD) {
+        if(newD[key] !== oldD[key]) {
+          changes.push(`${key}: "${oldD[key] || ''}" → "${newD[key]}"`);
+        }
+      }
+      if(changes.length === 0) return;
+
+      const entry = {
+        date: new Date().toLocaleString(),
+        changes: changes
+      };
+
+      userProfileHistory.push(entry);
+      localStorage.setItem('userProfileHistory', JSON.stringify(userProfileHistory));
+    }
+
+    // Eliminar cuenta (resetea datos en LocalStorage)
+    deleteAccountBtn.addEventListener('click', () => {
+      const confirmDelete = confirm("¿Estás seguro de eliminar tu cuenta? Esta acción no se puede deshacer.");
+      if(confirmDelete) {
+        localStorage.removeItem('userProfile');
+        localStorage.removeItem('userProfileHistory');
+        alert("Cuenta eliminada. Volviendo al inicio...");
+        window.location.href = "login.html";
+      }
+    });
+
+    // Mostrar/ocultar historial
+    toggleHistoryBtn.addEventListener('click', () => {
+      if(profileHistory.classList.contains('hidden')) {
+        profileHistory.classList.remove('hidden');
+        fillHistoryTable();
+        toggleHistoryBtn.innerText = "Ocultar Historial de Cambios";
+      } else {
+        profileHistory.classList.add('hidden');
+        toggleHistoryBtn.innerText = "Ver Historial de Cambios";
+      }
+    });
+
+    function fillHistoryTable() {
+      profileHistoryBody.innerHTML = "";
+      userProfileHistory.forEach(entry => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="px-4 py-2 border">${entry.date}</td>
+          <td class="px-4 py-2 border">
+            <ul class="list-disc list-inside">
+              ${entry.changes.map(change => `<li>${change}</li>`).join('')}
+            </ul>
+          </td>
+        `;
+        profileHistoryBody.appendChild(row);
+      });
+    }
+  </script>
+</body>
+</html>

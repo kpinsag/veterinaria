@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red Social Veterinaria - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --peach: #f8f8f8;
+            /* Durazno */
+            --orange: #FF8C42;
+            /* Naranja */
+            --darkOrange: #E76F24;
+            /* Naranja oscuro */
+        }
+
+        .sidebar {
+            box-shadow: 4px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar a:hover {
+            background-color: #E76F24;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar ul li a {
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 18px;
+            transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+        }
+
+        .sidebar ul li a:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-container img {
+            transition: transform 0.3s ease;
+        }
+
+        .logo-container:hover img {
+            transform: rotate(360deg);
+        }
+
+        .sidebar h2 {
+            font-size: 2rem;
+        }
+    </style>
+</head>
+
+<body class="bg-[var(--peach)] font-sans flex">
+
+    <!-- Sidebar -->
+    <div class="sidebar bg-[var(--orange)] text-white p-6 fixed h-full w-64">
+        <div class="flex items-center mb-8 logo-container">
+            <img src="/assets/images/logo.png" alt="Logo" class="h-12 w-12 mr-4">
+            <h2 class="text-3xl font-bold">Mi Petpocked</h2>
+        </div>
+        <h2 class="text-2xl font-bold mb-6 text-center">Red Social Veterinaria</h2>
+        <ul class="space-y-4">
+            <li>
+                <a href="users.html" class="flex items-center">
+                    👤 Usuarios
+                </a>
+            </li>
+            <li>
+                <a href="posts.html" class="flex items-center">
+                    📝 Publicaciones
+                </a>
+            </li>
+            <li>
+                <a href="friends.html" class="flex items-center">
+                    🤝 Amigos
+                </a>
+            </li>
+            <li>
+                <a href="messages.html" class="flex items-center">
+                    💌 Mensajes
+                </a>
+            </li>
+            <li>
+                <a href="notifications.html" class="flex items-center">
+                    🔔 Notificaciones
+                </a>
+            </li>
+            <li>
+                <a href="/core/dashboard.html" class="flex items-center">
+                    🔙 Volver al Dashboard
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Content -->
+    <div class="content p-6 ml-64 w-full flex-grow">
+        <h1 class="text-4xl font-bold text-[var(--orange)] mb-4">Bienvenido al Dashboard de la Red Social Veterinaria
+        </h1>
+
+        <!-- Estadísticas -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="bg-white shadow-lg p-6 rounded-lg text-center">
+                <h5 class="text-xl font-semibold mb-2">Total de Usuarios</h5>
+                <p class="text-4xl font-bold">1024</p>
+                <a href="users.html" class="bg-[var(--orange)] text-white px-4 py-2 rounded-md mt-4 inline-block">Ver
+                    detalles</a>
+            </div>
+            <div class="bg-white shadow-lg p-6 rounded-lg text-center">
+                <h5 class="text-xl font-semibold mb-2">Publicaciones Recientes</h5>
+                <p class="text-4xl font-bold">350</p>
+                <a href="posts.html" class="bg-[var(--orange)] text-white px-4 py-2 rounded-md mt-4 inline-block">Ver
+                    detalles</a>
+            </div>
+            <div class="bg-white shadow-lg p-6 rounded-lg text-center">
+                <h5 class="text-xl font-semibold mb-2">Amigos Conectados</h5>
+                <p class="text-4xl font-bold">248</p>
+                <a href="friends.html" class="bg-[var(--orange)] text-white px-4 py-2 rounded-md mt-4 inline-block">Ver
+                    detalles</a>
+            </div>
+        </div>
+
+        <!-- Gráfico de estadísticas -->
+        <div class="bg-white shadow-lg p-6 rounded-lg mt-8">
+            <h2 class="text-2xl font-semibold mb-4">Actividad de Usuarios</h2>
+            <p class="text-lg">Próximamente se mostrará un gráfico de actividad.</p>
+        </div>
+
+        <!-- Notificaciones -->
+        <div class="bg-white shadow-lg p-6 rounded-lg mt-8">
+            <h2 class="text-2xl font-semibold mb-4">Notificaciones</h2>
+            <ul class="space-y-3">
+                <li class="flex items-center">
+                    <span class="text-sm text-[var(--darkOrange)]">Nuevo mensaje de <strong>Juan Pérez</strong></span>
+                    <button class="ml-auto bg-[var(--orange)] text-white text-xs px-4 py-1 rounded">Ver</button>
+                </li>
+                <li class="flex items-center">
+                    <span class="text-sm text-[var(--darkOrange)]">Nueva solicitud de amistad de <strong>Pedro
+                            García</strong></span>
+                    <button class="ml-auto bg-[var(--orange)] text-white text-xs px-4 py-1 rounded">Aceptar</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Amigos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --peach: #fff9f4;
+            /* Durazno */
+            --orange: #FF8C42;
+            /* Naranja */
+            --darkOrange: #E76F24;
+            /* Naranja oscuro */
+        }
+    </style>
+</head>
+
+<body class="bg-[var(--peach)] font-sans flex" id="app">
+
+    <!-- Sidebar -->
+    <div class="sidebar bg-[var(--orange)] text-white p-6 fixed h-full w-64">
+        <h2 class="text-2xl font-bold mb-6 text-center">Red Social</h2>
+        <ul class="space-y-4">
+            <li>
+                <a href="index.html" class="text-white hover:text-[var(--darkOrange)]">🏠 Inicio</a>
+            </li>
+            <li>
+                <a href="users.html" class="text-white hover:text-[var(--darkOrange)]">👤 Usuarios</a>
+            </li>
+            <li>
+                <a href="posts.html" class="text-white hover:text-[var(--darkOrange)]">📝 Publicaciones</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Content -->
+    <div class="content p-6 ml-64 w-full flex-grow">
+        <h1 class="text-3xl font-bold text-[var(--orange)] mb-4">Lista de Amigos</h1>
+        <button onclick="showAddFriendModal()"
+            class="bg-[var(--orange)] text-white px-6 py-3 rounded-md mb-4 hover:bg-[var(--darkOrange)]">➕ Nuevo
+            Amigo</button>
+
+        <!-- Amigos Table -->
+        <table class="min-w-full bg-white shadow-md rounded-lg" id="friendsTable">
+            <thead>
+                <tr class="bg-[var(--orange)] text-white">
+                    <th class="py-3 px-4 text-left">Nombre</th>
+                    <th class="py-3 px-4 text-left">Correo</th>
+                    <th class="py-3 px-4 text-left">Fecha de Nacimiento</th>
+                    <th class="py-3 px-4 text-left">Estado</th>
+                    <th class="py-3 px-4 text-left">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Amigos list will appear here -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal para agregar o editar un amigo -->
+    <div id="friendModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+        <div class="bg-white p-6 rounded-lg w-1/3">
+            <h2 class="text-2xl mb-4" id="modalTitle">Agregar Nuevo Amigo</h2>
+            <input type="text" id="friendName" placeholder="Nombre del Amigo"
+                class="w-full p-2 border border-gray-300 mb-4" />
+            <input type="email" id="friendEmail" placeholder="Correo Electrónico"
+                class="w-full p-2 border border-gray-300 mb-4" />
+            <input type="date" id="friendDOB" class="w-full p-2 border border-gray-300 mb-4" />
+            <select id="friendStatus" class="w-full p-2 border border-gray-300 mb-4">
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+            </select>
+            <button onclick="saveFriend()"
+                class="bg-[var(--orange)] text-white px-6 py-3 rounded-md hover:bg-[var(--darkOrange)]"
+                id="saveBtn">Agregar</button>
+            <button onclick="closeModal()"
+                class="ml-2 px-6 py-3 bg-red-500 text-white rounded-md hover:bg-red-400">Cancelar</button>
+        </div>
+    </div>
+
+    <script>
+        let editingFriendIndex = null;
+
+        // Cargar amigos desde localStorage al inicio
+        function loadFriends() {
+            const friends = JSON.parse(localStorage.getItem('friends')) || [];
+            const friendsTable = document.getElementById('friendsTable').getElementsByTagName('tbody')[0];
+            friendsTable.innerHTML = '';
+
+            friends.forEach((friend, index) => {
+                const row = friendsTable.insertRow();
+                row.innerHTML = `
+                    <td class="py-3 px-4">${friend.name}</td>
+                    <td class="py-3 px-4">${friend.email}</td>
+                    <td class="py-3 px-4">${friend.dob}</td>
+                    <td class="py-3 px-4">${friend.status}</td>
+                    <td class="py-3 px-4">
+                        <button onclick="editFriend(${index})" class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-400">✏️ Editar</button>
+                        <button onclick="deleteFriend(${index})" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">❌ Eliminar</button>
+                    </td>
+                `;
+            });
+        }
+
+        // Mostrar modal para agregar un nuevo amigo
+        function showAddFriendModal() {
+            document.getElementById('friendModal').classList.remove('hidden');
+            document.getElementById('modalTitle').innerText = 'Agregar Nuevo Amigo';
+            document.getElementById('friendName').value = '';
+            document.getElementById('friendEmail').value = '';
+            document.getElementById('friendDOB').value = '';
+            document.getElementById('friendStatus').value = 'Activo';
+            document.getElementById('saveBtn').innerText = 'Agregar';
+            editingFriendIndex = null;
+        }
+
+        // Mostrar modal para editar un amigo
+        function editFriend(index) {
+            const friends = JSON.parse(localStorage.getItem('friends')) || [];
+            const friend = friends[index];
+            document.getElementById('friendName').value = friend.name;
+            document.getElementById('friendEmail').value = friend.email;
+            document.getElementById('friendDOB').value = friend.dob;
+            document.getElementById('friendStatus').value = friend.status;
+            document.getElementById('modalTitle').innerText = 'Editar Amigo';
+            document.getElementById('saveBtn').innerText = 'Actualizar';
+            editingFriendIndex = index;
+            document.getElementById('friendModal').classList.remove('hidden');
+        }
+
+        // Guardar o actualizar el amigo
+        function saveFriend() {
+            const friendName = document.getElementById('friendName').value;
+            const friendEmail = document.getElementById('friendEmail').value;
+            const friendDOB = document.getElementById('friendDOB').value;
+            const friendStatus = document.getElementById('friendStatus').value;
+
+            if (!friendName || !friendEmail || !friendDOB) {
+                alert('Por favor, completa todos los campos');
+                return;
+            }
+
+            const friends = JSON.parse(localStorage.getItem('friends')) || [];
+
+            const newFriend = { name: friendName, email: friendEmail, dob: friendDOB, status: friendStatus };
+
+            if (editingFriendIndex !== null) {
+                // Actualizar amigo existente
+                friends[editingFriendIndex] = newFriend;
+            } else {
+                // Agregar nuevo amigo
+                friends.push(newFriend);
+            }
+
+            localStorage.setItem('friends', JSON.stringify(friends));
+            loadFriends();
+            closeModal();
+        }
+
+        // Eliminar amigo
+        function deleteFriend(index) {
+            const friends = JSON.parse(localStorage.getItem('friends')) || [];
+            friends.splice(index, 1);
+
+            localStorage.setItem('friends', JSON.stringify(friends));
+            loadFriends();
+        }
+
+        // Cerrar modal
+        function closeModal() {
+            document.getElementById('friendModal').classList.add('hidden');
+        }
+
+        // Cargar amigos al inicio
+        loadFriends();
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Recursos Humanos | Gestión Veterinaria</title>
+
+ <!-- Tailwind CSS -->
+ <script src="https://cdn.tailwindcss.com"></script>
+ <!-- FontAwesome para íconos -->
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+ <script>
+  tailwind.config = {
+   theme: {
+    extend: {
+     colors: {
+      brand: {
+       DEFAULT: "#ff7f00",
+       light: "#ffae42",
+       dark: "#cc6600"
+      },
+      background: "#F5F5F5",
+      success: "#10B981",
+      warning: "#F59E0B",
+      danger: "#EF4444"
+     },
+     boxShadow: {
+      'card': '0 4px 6px rgba(0, 0, 0, 0.1)',
+     }
+    }
+   }
+  };
+ </script>
+</head>
+
+<body class="bg-background font-sans flex">
+
+ <!-- Botón de menú en móviles -->
+ <button id="menu-toggle" class="fixed top-4 left-4 md:hidden bg-brand text-white p-2 rounded-md shadow-lg">
+  <i class="fas fa-bars"></i>
+ </button>
+
+ <!-- Sidebar -->
+ <aside id="sidebar"
+  class="w-64 bg-brand text-white flex flex-col h-screen shadow-lg md:static fixed top-0 left-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300">
+  <div class="p-6 flex justify-between items-center">
+   <h2 class="text-2xl font-bold">Recursos Humanos</h2>
+   <button id="menu-close" class="md:hidden text-white">
+    <i class="fas fa-times"></i>
+   </button>
+  </div>
+  <nav class="flex-1">
+   <ul class="space-y-4 p-6">
+    <li>
+     <a href="empleados.html" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/20">
+      <i class="fas fa-users w-5 text-center"></i>
+      <span>Empleados</span>
+     </a>
+    </li>
+    <li>
+     <a href="horarios.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition">
+      <i class="fas fa-user-tag w-5 text-center"></i>
+      <span>Horarios</span>
+     </a>
+    </li>
+    <li>
+     <a href="asistencia.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition">
+      <i class="fas fa-user-tag w-5 text-center"></i>
+      <span>Control de Asistencia</span>
+     </a>
+    </li>
+    <li>
+     <a href="evaluaciones.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition">
+      <i class="fas fa-user-tag w-5 text-center"></i>
+      <span>Evaluaciones</span>
+     </a>
+    </li>
+   </ul>
+  </nav>
+  <div class="p-6 mt-auto">
+   <a href="../../core/dashboard.html" class="flex items-center bg-white/10 hover:bg-white/20 px-4 py-3 rounded-lg">
+    <i class="fas fa-arrow-left"></i>
+    Volver al Dashboard
+   </a>
+  </div>
+ </aside>
+
+ <!-- Contenido Principal -->
+ <main class="flex-1 p-8">
+  <header class="mb-8 text-center">
+   <h1 class="text-4xl font-bold text-gray-800">Dashboard Recursos Humanos</h1>
+   <p class="text-gray-600">Gestión de empleados, roles y turnos</p>
+  </header>
+
+  <!-- Sección de estadísticas -->
+  <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+   <div class="bg-white rounded-2xl p-6 shadow-card hover:shadow-lg transition-shadow border-l-4 border-brand">
+    <div class="flex items-center justify-between">
+     <div>
+      <p class="text-sm text-gray-500 mb-1">Total de Empleados</p>
+      <p id="total-empleados" class="text-3xl font-bold text-gray-800">0</p>
+     </div>
+     <div class="w-12 h-12 bg-brand/10 rounded-lg flex items-center justify-center">
+      <i class="fas fa-users text-brand text-xl"></i>
+     </div>
+    </div>
+   </div>
+  </section>
+
+  <!-- Últimos registros -->
+  <section class="bg-white p-6 rounded-lg shadow-card border-t-4 border-success">
+   <h2 class="text-xl font-bold text-gray-800 mb-4">Últimas Contrataciones</h2>
+   <div class="overflow-x-auto">
+    <table class="w-full">
+     <thead>
+      <tr class="text-left text-sm text-gray-500 border-b border-gray-100">
+       <th class="pb-4">Fecha</th>
+       <th class="pb-4">Nombre</th>
+       <th class="pb-4">Cargo</th>
+       <th class="pb-4">Salario</th>
+      </tr>
+     </thead>
+     <tbody id="tabla-empleados" class="divide-y divide-gray-100">
+     </tbody>
+    </table>
+   </div>
+  </section>
+ </main>
+
+ <script>
+  // Menú lateral responsivo
+  document.getElementById('menu-toggle').addEventListener('click', function () {
+   document.getElementById('sidebar').classList.toggle('-translate-x-full');
+  });
+  document.getElementById('menu-close').addEventListener('click', function () {
+   document.getElementById('sidebar').classList.add('-translate-x-full');
+  });
+
+  // Datos dinámicos de empleados
+  const empleados = [
+   { fecha: "20/01/2025", nombre: "Ana López", cargo: "Veterinaria", salario: "$2,500" },
+   { fecha: "18/01/2025", nombre: "Carlos Pérez", cargo: "Recepcionista", salario: "$1,200" },
+   { fecha: "15/01/2025", nombre: "María Gómez", cargo: "Asistente", salario: "$1,500" }
+  ];
+
+  document.getElementById("total-empleados").textContent = empleados.length;
+  const tablaEmpleados = document.getElementById("tabla-empleados");
+  empleados.forEach(emp => {
+   const fila = document.createElement("tr");
+   fila.innerHTML = `
+    <td class="py-4">${emp.fecha}</td>
+    <td class="py-4 font-medium text-gray-800">${emp.nombre}</td>
+    <td class="py-4">${emp.cargo}</td>
+    <td class="py-4">${emp.salario}</td>
+   `;
+   tablaEmpleados.appendChild(fila);
+  });
+ </script>
+</body>
+
+</html>

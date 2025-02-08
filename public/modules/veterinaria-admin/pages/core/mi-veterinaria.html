@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Veterinaria | Veterinaria</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome para iconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Configuración de Tailwind -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: "#ff7f00",
+              light: "#ffae42",
+              dark: "#cc6600"
+            },
+            white: "#ffffff"
+          },
+          animation: {
+            'bounce-slow': 'bounce 1.5s infinite'
+          }
+        }
+      }
+    };
+  </script>
+</head>
+
+<body class="bg-gray-50 font-sans min-h-screen">
+
+  <!-- HEADER MEJORADO -->
+  <nav class="bg-brand sticky top-0 z-10 p-4 text-white shadow-lg transition-all duration-300 hover:shadow-xl">
+    <div class="container mx-auto flex flex-wrap items-center justify-between">
+      <!-- Logo con icono -->
+      <div class="flex items-center space-x-3">
+        <i class="fas fa-paw text-2xl animate-bounce-slow"></i>
+        <h1 class="text-2xl font-bold tracking-tight">Mi Veterinaria</h1>
+      </div>
+
+      <!-- Menú con iconos -->
+      <div class="flex items-center space-x-6">
+        <a href="dashboard.html" class="flex items-center space-x-2 transition-transform duration-300 hover:scale-105">
+          <i class="fas fa-chart-line"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="mi-perfil.html" class="flex items-center space-x-2 transition-transform duration-300 hover:scale-105">
+          <i class="fas fa-user-circle"></i>
+          <span>Mi Perfil</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTENEDOR PRINCIPAL MÁS ANCHO -->
+  <main class="container mx-auto mt-8 p-4">
+    <section class="bg-white p-8 rounded-2xl shadow-sm mx-auto w-full max-w-4xl">
+      <div class="text-center mb-8">
+        <h2 class="text-4xl font-bold text-gray-800 mb-3">
+          <i class="fas fa-clinic-medical mr-2 text-brand"></i>
+          Información Veterinaria
+        </h2>
+        <p class="text-gray-600 text-lg">Actualiza los datos de tu clínica veterinaria</p>
+      </div>
+
+      <!-- FORMULARIO MÁS ANCHO -->
+      <form id="vetDataForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Columna Izquierda -->
+        <div class="space-y-5">
+          <div>
+            <label class="block font-semibold text-gray-700 mb-2">
+              <i class="fas fa-hospital text-brand mr-2"></i>
+              Nombre de la Veterinaria *
+            </label>
+            <input type="text" id="vetName"
+              class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-dark focus:border-transparent transition-all"
+              placeholder="Ej: Veterinaria Los Amigos" required />
+          </div>
+
+          <div>
+            <label class="block font-semibold text-gray-700 mb-2">
+              <i class="fas fa-address-card text-brand mr-2"></i>
+              NIT o Identificación *
+            </label>
+            <input type="text" id="vetNit"
+              class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-dark focus:border-transparent transition-all"
+              placeholder="Ej: 123456789-0" required />
+          </div>
+
+          <div>
+            <label class="block font-semibold text-gray-700 mb-2">
+              <i class="fas fa-map-marker-alt text-brand mr-2"></i>
+              Dirección Completa *
+            </label>
+            <input type="text" id="vetAddress"
+              class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-dark focus:border-transparent transition-all"
+              placeholder="Ej: Calle 123 #45-67" required />
+          </div>
+        </div>
+
+        <!-- Columna Derecha -->
+        <div class="space-y-5">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block font-semibold text-gray-700 mb-2">
+                <i class="fas fa-city text-brand mr-2"></i>
+                Ciudad *
+              </label>
+              <input type="text" id="vetCity"
+                class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-dark focus:border-transparent transition-all"
+                placeholder="Ej: Bogotá" required />
+            </div>
+            <div>
+              <label class="block font-semibold text-gray-700 mb-2">
+                <i class="fas fa-flag text-brand mr-2"></i>
+                País *
+              </label>
+              <input type="text" id="vetCountry"
+                class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-dark focus:border-transparent transition-all"
+                placeholder="Ej: Colombia" required />
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-gray-700 mb-2">
+              <i class="fas fa-phone text-brand mr-2"></i>
+              Teléfono *
+            </label>
+            <input type="text" id="vetPhone"
+              class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-dark focus:border-transparent transition-all"
+              placeholder="3001234567" required />
+          </div>
+
+          <div>
+            <label class="block font-semibold text-gray-700 mb-2">
+              <i class="fas fa-envelope text-brand mr-2"></i>
+              Correo Electrónico
+            </label>
+            <input type="email" id="vetEmail"
+              class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-dark focus:border-transparent transition-all"
+              placeholder="contacto@tuveterinaria.com" />
+          </div>
+
+          <div>
+            <label class="block font-semibold text-gray-700 mb-2">
+              <i class="fas fa-file-certificate text-brand mr-2"></i>
+              Licencia o Registro
+            </label>
+            <input type="text" id="vetLicense"
+              class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-dark focus:border-transparent transition-all"
+              placeholder="Ej: #12345" />
+          </div>
+        </div>
+
+        <!-- Botón de guardar -->
+        <div class="md:col-span-2">
+          <button type="submit"
+            class="bg-brand text-white px-8 py-4 rounded-xl hover:bg-brand-dark transition-all duration-300 w-full font-bold text-lg hover:shadow-lg hover:-translate-y-1">
+            <i class="fas fa-save mr-2"></i>
+            Guardar Cambios
+          </button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <!-- El script se mantiene igual -->
+  <script>
+    const vetDataForm = document.getElementById('vetDataForm');
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const vetData = JSON.parse(localStorage.getItem('veterinaria'));
+      if (vetData) {
+        document.getElementById('vetName').value = vetData.nombre || '';
+        document.getElementById('vetNit').value = vetData.nit || '';
+        document.getElementById('vetAddress').value = vetData.direccion || '';
+        document.getElementById('vetCity').value = vetData.ciudad || '';
+        document.getElementById('vetCountry').value = vetData.pais || '';
+        document.getElementById('vetPhone').value = vetData.telefono || '';
+        document.getElementById('vetEmail').value = vetData.email || '';
+        document.getElementById('vetLicense').value = vetData.licencia || '';
+      }
+    });
+
+    vetDataForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const updatedVetData = {
+        nombre: document.getElementById('vetName').value.trim(),
+        nit: document.getElementById('vetNit').value.trim(),
+        direccion: document.getElementById('vetAddress').value.trim(),
+        ciudad: document.getElementById('vetCity').value.trim(),
+        pais: document.getElementById('vetCountry').value.trim(),
+        telefono: document.getElementById('vetPhone').value.trim(),
+        email: document.getElementById('vetEmail').value.trim(),
+        licencia: document.getElementById('vetLicense').value.trim()
+      };
+      localStorage.setItem('veterinaria', JSON.stringify(updatedVetData));
+      alert("Datos actualizados correctamente");
+    });
+  </script>
+
+</body>
+
+</html>

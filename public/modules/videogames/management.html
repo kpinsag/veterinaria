@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Videojuegos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --blue: #4A90E2;
+            /* Azul */
+            --darkBlue: #1E3A8A;
+            /* Azul oscuro */
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+
+    <!-- Sidebar -->
+    <div
+        class="sidebar bg-[var(--darkBlue)] text-white p-6 fixed h-full w-64 sm:w-16 md:w-64 lg:w-64 xl:w-64 transition-all duration-300">
+        <h2 class="text-2xl font-bold mb-6 text-center hidden sm:block">Videojuegos</h2>
+        <ul class="space-y-4">
+            <li>
+                <a href="index.html" class="text-white hover:text-[var(--blue)]">🏠 Inicio</a>
+            </li>
+            <li>
+                <a href="characters.html" class="text-white hover:text-[var(--blue)]">👾 Personajes y Skins</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Content -->
+    <div class="content p-6 ml-64 sm:ml-16 md:ml-64 lg:ml-64 xl:ml-64 w-full">
+        <h1 class="text-4xl font-bold text-[var(--blue)] mb-6">Gestión de Videojuegos</h1>
+        <button onclick="showCreateGameModal()"
+            class="btn bg-[var(--blue)] text-white px-4 py-2 rounded-md mb-6 hover:bg-blue-600">➕ Agregar
+            Videojuego</button>
+
+        <table class="min-w-full table-auto border-collapse">
+            <thead>
+                <tr>
+                    <th class="px-4 py-2 text-left bg-[var(--blue)] text-white">Nombre</th>
+                    <th class="px-4 py-2 text-left bg-[var(--blue)] text-white">Descripción</th>
+                    <th class="px-4 py-2 text-left bg-[var(--blue)] text-white">Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="gamesList">
+                <!-- Los videojuegos se cargarán aquí -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal para agregar o editar videojuego -->
+    <div id="gameModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+        <div class="bg-white p-6 rounded-lg w-1/3">
+            <h2 class="text-2xl mb-4" id="modalTitle">Agregar Videojuego</h2>
+            <input type="text" id="gameName" placeholder="Nombre del Videojuego"
+                class="w-full p-2 border border-gray-300 mb-4" />
+            <textarea id="gameDescription" placeholder="Descripción del Videojuego"
+                class="w-full p-2 border border-gray-300 mb-4"></textarea>
+            <button onclick="saveGame()" class="bg-[var(--blue)] text-white px-6 py-3 rounded-md hover:bg-blue-600"
+                id="saveBtn">Guardar</button>
+            <button onclick="closeModal()"
+                class="ml-2 px-6 py-3 bg-red-500 text-white rounded-md hover:bg-red-600">Cancelar</button>
+        </div>
+    </div>
+
+    <script>
+        let editingGameIndex = null;
+
+        // Cargar videojuegos desde localStorage
+        function loadGames() {
+            const games = JSON.parse(localStorage.getItem('games')) || [];
+            const gamesList = document.getElementById('gamesList');
+            gamesList.innerHTML = '';
+
+            games.forEach((game, index) => {
+                const gameElement = document.createElement('tr');
+                gameElement.className = 'text-left border-b border-gray-300';
+                gameElement.innerHTML = `
+                    <td class="px-4 py-2">${game.name}</td>
+                    <td class="px-4 py-2">${game.description}</td>
+                    <td class="px-4 py-2">
+                        <button onclick="editGame(${index})" class="edit bg-yellow-500 text-white px-2 py-1 rounded-md hover:bg-yellow-600">✏️</button>
+                        <button onclick="deleteGame(${index})" class="delete bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600">🗑️</button>
+                    </td>
+                `;
+                gamesList.appendChild(gameElement);
+            });
+        }
+
+        // Mostrar modal para agregar videojuego
+        function showCreateGameModal() {
+            document.getElementById('gameModal').classList.remove('hidden');
+            document.getElementById('modalTitle').innerText = 'Agregar Videojuego';
+            document.getElementById('gameName').value = '';
+            document.getElementById('gameDescription').value = '';
+            document.getElementById('saveBtn').innerText = 'Guardar';
+            editingGameIndex = null;
+        }
+
+        // Mostrar modal para editar videojuego
+        function editGame(index) {
+            const games = JSON.parse(localStorage.getItem('games')) || [];
+            const game = games[index];
+            document.getElementById('gameName').value = game.name;
+            document.getElementById('gameDescription').value = game.description;
+            document.getElementById('modalTitle').innerText = 'Editar Videojuego';
+            document.getElementById('saveBtn').innerText = 'Actualizar';
+            editingGameIndex = index;
+            document.getElementById('gameModal').classList.remove('hidden');
+        }
+
+        // Guardar o actualizar videojuego
+        function saveGame() {
+            const name = document.getElementById('gameName').value;
+            const description = document.getElementById('gameDescription').value;
+
+            if (!name || !description) {
+                alert('Por favor, completa todos los campos');
+                return;
+            }
+
+            const games = JSON.parse(localStorage.getItem('games')) || [];
+
+            if (editingGameIndex !== null) {
+                games[editingGameIndex] = { name, description };
+            } else {
+                games.push({ name, description });
+            }
+
+            localStorage.setItem('games', JSON.stringify(games));
+            loadGames();
+            closeModal();
+        }
+
+        // Eliminar videojuego
+        function deleteGame(index) {
+            const games = JSON.parse(localStorage.getItem('games')) || [];
+            games.splice(index, 1);
+            localStorage.setItem('games', JSON.stringify(games));
+            loadGames();
+        }
+
+        // Cerrar modal
+        function closeModal() {
+            document.getElementById('gameModal').classList.add('hidden');
+        }
+
+        // Cargar videojuegos al inicio
+        loadGames();
+    </script>
+
+</body>
+
+</html>

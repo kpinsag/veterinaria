@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bandeja de Entrada</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --peach: #fdf8f5;
+            /* Durazno */
+            --orange: #FF8C42;
+            /* Naranja */
+            --darkOrange: #E76F24;
+            /* Naranja oscuro */
+        }
+
+        body {
+            background-color: var(--peach);
+            font-family: 'Arial', sans-serif;
+        }
+
+        .sidebar {
+            background-color: var(--orange);
+            color: white;
+            width: 250px;
+            position: fixed;
+            height: 100%;
+            padding: 20px;
+            box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px 0;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: var(--darkOrange);
+        }
+
+        .content {
+            margin-left: 270px;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            color: var(--orange);
+        }
+
+        .header button {
+            background-color: var(--orange);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .header button:hover {
+            background-color: var(--darkOrange);
+        }
+
+        .email-item {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .email-item:hover {
+            background-color: #f9f9f9;
+        }
+
+        .email-item .email-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .email-item .email-details .subject {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .email-item .email-details .sender,
+        .email-item .email-details .date {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .email-item .email-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .email-item .email-actions button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        .email-item .email-actions button:hover {
+            color: var(--darkOrange);
+        }
+
+        #emailModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        #emailModal .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 400px;
+        }
+
+        #emailModal input,
+        #emailModal textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #emailModal button {
+            background-color: var(--orange);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        #emailModal button:hover {
+            background-color: var(--darkOrange);
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Red Social</h2>
+        <a href="index.html">🏠 Inicio</a>
+        <a href="users.html">👤 Usuarios</a>
+        <a href="friends.html">🤝 Amigos</a>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <div class="header">
+            <h1>Bandeja de Entrada</h1>
+            <button onclick="openEmailModal()">Nuevo Correo</button>
+        </div>
+
+        <!-- Lista de correos -->
+        <div class="email-list" id="emailList"></div>
+    </div>
+
+    <!-- Modal para editar/agregar correos -->
+    <div id="emailModal" class="flex">
+        <div class="modal-content">
+            <h2 id="modalTitle">Nuevo Correo</h2>
+            <input type="text" id="emailSubject" placeholder="Asunto" />
+            <input type="email" id="emailSender" placeholder="Remitente" />
+            <textarea id="emailBody" placeholder="Cuerpo del mensaje"></textarea>
+            <button onclick="saveEmail()">Guardar Correo</button>
+            <button onclick="closeModal()">Cancelar</button>
+        </div>
+    </div>
+
+    <script>
+        let editingEmailIndex = null;
+
+        // Cargar correos desde localStorage
+        function loadEmails() {
+            const emails = JSON.parse(localStorage.getItem('emails')) || [];
+            const emailList = document.getElementById('emailList');
+            emailList.innerHTML = '';
+
+            emails.forEach((email, index) => {
+                const emailElement = document.createElement('div');
+                emailElement.className = 'email-item';
+                emailElement.innerHTML = `
+                    <div class="email-details">
+                        <span class="subject">${email.subject}</span>
+                        <span class="sender">${email.sender}</span>
+                        <span class="date">${email.date}</span>
+                    </div>
+                    <div class="email-actions">
+                        <button onclick="editEmail(${index})">✏️ Editar</button>
+                        <button onclick="deleteEmail(${index})">🗑️ Eliminar</button>
+                    </div>
+                `;
+                emailList.appendChild(emailElement);
+            });
+        }
+
+        // Abrir modal para agregar nuevo correo o editar uno existente
+        function openEmailModal() {
+            document.getElementById('emailModal').style.display = 'flex';
+            document.getElementById('modalTitle').textContent = 'Nuevo Correo';
+            document.getElementById('emailSubject').value = '';
+            document.getElementById('emailSender').value = '';
+            document.getElementById('emailBody').value = '';
+            editingEmailIndex = null;
+        }
+
+        // Cerrar modal
+        function closeModal() {
+            document.getElementById('emailModal').style.display = 'none';
+        }
+
+        // Guardar o actualizar correo
+        function saveEmail() {
+            const subject = document.getElementById('emailSubject').value;
+            const sender = document.getElementById('emailSender').value;
+            const body = document.getElementById('emailBody').value;
+
+            if (!subject || !sender || !body) {
+                alert('Por favor completa todos los campos');
+                return;
+            }
+
+            const emails = JSON.parse(localStorage.getItem('emails')) || [];
+            const date = new Date().toLocaleString();
+
+            if (editingEmailIndex !== null) {
+                emails[editingEmailIndex] = { subject, sender, body, date };
+            } else {
+                emails.push({ subject, sender, body, date });
+            }
+
+            localStorage.setItem('emails', JSON.stringify(emails));
+            loadEmails();
+            closeModal();
+        }
+
+        // Editar correo
+        function editEmail(index) {
+            const emails = JSON.parse(localStorage.getItem('emails')) || [];
+            const email = emails[index];
+
+            document.getElementById('emailSubject').value = email.subject;
+            document.getElementById('emailSender').value = email.sender;
+            document.getElementById('emailBody').value = email.body;
+
+            document.getElementById('modalTitle').textContent = 'Editar Correo';
+            editingEmailIndex = index;
+            document.getElementById('emailModal').style.display = 'flex';
+        }
+
+        // Eliminar correo
+        function deleteEmail(index) {
+            const emails = JSON.parse(localStorage.getItem('emails')) || [];
+            emails.splice(index, 1);
+            localStorage.setItem('emails', JSON.stringify(emails));
+            loadEmails();
+        }
+
+        // Cargar los correos al iniciar la página
+        loadEmails();
+    </script>
+
+</body>
+
+</html>
+ 

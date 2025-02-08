@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Gestión Veterinaria</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Configuración de Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            DEFAULT: "#ff7f00",
+                            light: "#ffae42",
+                            dark: "#cc6600"
+                        },
+                        background: "#F5F5F5",
+                        white: "#ffffff"
+                    }
+                }
+            }
+        };
+    </script>
+
+</head>
+
+<body class="bg-background font-sans">
+    <div class="flex flex-col lg:flex-row min-h-screen">
+
+        <!-- Sidebar -->
+        <nav class="bg-brand text-white w-full lg:w-64 p-6 flex flex-col shadow-lg lg:min-h-screen">
+            <!-- Logo y Nombre -->
+            <div class="flex items-center justify-center lg:justify-start mb-8">
+                <img src="../assets/images/logo.png" alt="Logo" class="h-12 w-12 mr-4">
+                <h2 class="text-2xl font-bold">Mi PetPocket</h2>
+            </div>
+
+            <!-- Perfil de Usuario -->
+            <div class="bg-white text-gray-800 p-4 rounded-lg shadow-md mb-6">
+                <div class="flex items-center space-x-4">
+                    <img src="../assets/images/perfil.jpg" alt="Avatar"
+                        class="rounded-full h-12 w-12 border-2 border-brand-dark">
+                    <div>
+                        <h3 class="font-semibold text-lg">Kevin Pinsag</h3>
+                        <p class="text-sm text-gray-600">Administrador</p>
+                    </div>
+                </div>
+                <a href="profile.html">
+                    <button
+                        class="w-full mt-4 py-2 bg-brand-dark text-white rounded-lg hover:bg-brand transition">Editar
+                        Perfil</button>
+                </a>
+            </div>
+
+            <!-- Menú de Navegación -->
+            <ul class="space-y-4">
+                <li>
+                    <a href="../modules/veterinaria-admin/pages/core/register-vet.html"
+                        class="block py-3 px-5 rounded hover:bg-brand-dark transition">
+                        🏥 Veterinaria
+                    </a>
+                </li>
+                <li>
+                    <a href="../modules/social-network/index.html"
+                        class="block py-3 px-5 rounded hover:bg-brand-dark transition">
+                        👥 Red Social
+                    </a>
+                </li>
+                <li>
+                    <a href="../modules/videogames/index.html"
+                        class="block py-3 px-5 rounded hover:bg-brand-dark transition">
+                        🎮 Videojuegos
+                    </a>
+                </li>
+                <li>
+                    <a href="../core/login.html" class="block py-3 px-5 rounded hover:bg-brand-dark transition">
+                        🚪 Cerrar Sesión
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Contenido Principal -->
+        <main class="flex-1 p-6 lg:p-8">
+            <h1 class="text-4xl font-semibold text-center lg:text-left text-brand-dark mb-6">
+                Bienvenido al Dashboard
+            </h1>
+            <p class="text-lg text-gray-600 text-center lg:text-left mb-8">
+                Aquí tienes un vistazo general a las estadísticas de la aplicación.
+            </p>
+
+            <!-- Sección de Estadísticas -->
+            <section>
+                <h2 class="text-2xl font-semibold text-brand-dark mb-4">Estadísticas Generales</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white shadow-lg p-6 rounded-lg hover:shadow-xl transition">
+                        <h3 class="text-xl font-semibold mb-2">Consultas Realizadas</h3>
+                        <p class="text-4xl font-bold text-brand">540</p>
+                    </div>
+                    <div class="bg-white shadow-lg p-6 rounded-lg hover:shadow-xl transition">
+                        <h3 class="text-xl font-semibold mb-2">Clientes Registrados</h3>
+                        <p class="text-4xl font-bold text-brand">1,200</p>
+                    </div>
+                    <div class="bg-white shadow-lg p-6 rounded-lg hover:shadow-xl transition">
+                        <h3 class="text-xl font-semibold mb-2">Usuarios Activos</h3>
+                        <p class="text-4xl font-bold text-brand">1,024</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Gráfico de Consultas -->
+            <section class="mt-8">
+                <h2 class="text-2xl font-semibold text-brand-dark mb-4">Estadísticas Visuales</h2>
+                <div class="bg-white shadow-lg p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold text-brand mb-4">Gráfico de Consultas por Mes</h3>
+                    <div class="bg-gray-100 p-4 rounded-lg">
+                        <div class="flex justify-between mb-4">
+                            <span class="text-gray-700">Enero</span>
+                            <span class="text-brand">120</span>
+                        </div>
+                        <div class="h-3 bg-brand mb-4 rounded-full" style="width: 60%"></div>
+                        <div class="flex justify-between mb-4">
+                            <span class="text-gray-700">Febrero</span>
+                            <span class="text-brand">90</span>
+                        </div>
+                        <div class="h-3 bg-brand mb-4 rounded-full" style="width: 45%"></div>
+                        <div class="flex justify-between mb-4">
+                            <span class="text-gray-700">Marzo</span>
+                            <span class="text-brand">180</span>
+                        </div>
+                        <div class="h-3 bg-brand mb-4 rounded-full" style="width: 90%"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+
+</html>

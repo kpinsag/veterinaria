@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Historial Clínico | Recepción</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome para iconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: "#ff7f00",
+            light: "#ffae42",
+            dark: "#cc6600",
+            background: "#F5F5F5",
+            success: "#10B981",
+            warning: "#F59E0B",
+            danger: "#EF4444"
+          },
+          boxShadow: {
+            'card': '0 4px 8px rgba(0, 0, 0, 0.1)',
+            'hover-card': '0 10px 20px rgba(0, 0, 0, 0.15)',
+            'sidebar': '4px 0 15px rgba(0, 0, 0, 0.1)'
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-background font-sans flex">
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="w-64 bg-brand text-white flex flex-col h-screen shadow-sidebar transition-all duration-300 ease-in-out">
+    <div class="p-6">
+      <h2 class="text-2xl font-bold flex items-center gap-3">
+        <i class="fas fa-folder-open"></i>
+        <span class="sidebar-text">Recepción</span>
+      </h2>
+    </div>
+
+    <nav class="flex-1 px-4">
+      <h3 class="text-sm font-semibold text-brand-light mb-3 sidebar-text">SECCIONES</h3>
+      <ul class="space-y-3">
+        <li><a href="./clientes.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/20"><i class="fas fa-user w-5 text-center"></i> Clientes</a></li>
+        <li><a href="./citas.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/20"><i class="fas fa-calendar-check w-5 text-center"></i> Citas</a></li>
+        <li><a href="./historial.html" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-white text-brand"><i class="fas fa-folder-open w-5 text-center"></i> Historial</a></li>
+        <li><a href="./facturacion.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/20"><i class="fas fa-file-invoice-dollar w-5 text-center"></i> Facturación</a></li>
+        <li><a href="./recordatorios.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/20"><i class="fas fa-bell w-5 text-center"></i> Recordatorios</a></li>
+      </ul>
+    </nav>
+
+    <div class="p-6 mt-auto">
+      <a href="/modules/veterinaria-admin/pages/core/dashboard.html" class="w-full flex items-center gap-2 bg-white/10 hover:bg-white/20 text-sm px-4 py-3 rounded-lg transition-all">
+        <i class="fas fa-arrow-left"></i> Volver al Dashboard
+      </a>
+    </div>
+  </aside>
+
+  <!-- Contenido Principal -->
+  <main class="flex-1 p-8">
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-800">Historial Clínico</h1>
+      <p class="text-gray-600">Registro de consultas y tratamientos</p>
+    </header>
+
+    <!-- Registro de historial -->
+    <section class="bg-white p-6 rounded-xl shadow-card mb-8">
+      <h2 class="text-xl font-semibold text-gray-700 mb-4"><i class="fas fa-plus-circle mr-2"></i> Registrar Consulta</h2>
+      <form id="historyForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <input type="hidden" id="editIndex">
+        <div>
+          <label class="block font-medium text-gray-700">Mascota</label>
+          <input type="text" id="historyPet" required class="w-full p-2 border rounded focus:ring-2 focus:ring-brand">
+        </div>
+        <div>
+          <label class="block font-medium text-gray-700">Cliente</label>
+          <input type="text" id="historyClient" required class="w-full p-2 border rounded focus:ring-2 focus:ring-brand">
+        </div>
+        <div>
+          <label class="block font-medium text-gray-700">Fecha</label>
+          <input type="date" id="historyDate" required class="w-full p-2 border rounded focus:ring-2 focus:ring-brand">
+        </div>
+        <div>
+          <label class="block font-medium text-gray-700">Diagnóstico</label>
+          <textarea id="historyDiagnosis" rows="3" required class="w-full p-2 border rounded focus:ring-2 focus:ring-brand"></textarea>
+        </div>
+        <div>
+          <label class="block font-medium text-gray-700">Tratamiento</label>
+          <textarea id="historyTreatment" rows="3" required class="w-full p-2 border rounded focus:ring-2 focus:ring-brand"></textarea>
+        </div>
+        <div class="col-span-2 lg:col-span-3 flex justify-end">
+          <button type="submit" class="bg-brand text-white px-6 py-2 rounded hover:bg-brand-dark transition font-semibold">
+            <i class="fas fa-save mr-1"></i>Guardar Consulta
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Lista de consultas -->
+    <section class="bg-white p-6 rounded-xl shadow-card">
+      <h2 class="text-xl font-semibold text-gray-700 mb-4"><i class="fas fa-list mr-2"></i> Historial de Consultas</h2>
+      <div id="historyList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </section>
+  </main>
+
+  <script>
+    let history = JSON.parse(localStorage.getItem("history")) || [];
+
+    function renderHistory() {
+      const container = document.getElementById("historyList");
+      container.innerHTML = history.map((h, i) => `
+        <div class="bg-light p-4 rounded-lg shadow flex justify-between items-center">
+          <h3 class="text-lg font-semibold">${h.pet}</h3>
+          <p class="text-sm text-gray-600">Diagnóstico: ${h.diagnosis}</p>
+          <button onclick="deleteHistory(${i})" class="text-danger"><i class="fas fa-trash"></i></button>
+        </div>
+      `).join("");
+      localStorage.setItem("history", JSON.stringify(history));
+    }
+
+    document.addEventListener("DOMContentLoaded", renderHistory);
+  </script>
+</body>
+</html>

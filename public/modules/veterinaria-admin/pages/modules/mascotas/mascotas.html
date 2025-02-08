@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mascotas | Gestión Veterinaria</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome para íconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: "#ff7f00",
+            light: "#ffae42",
+            dark: "#cc6600",
+            background: "#F5F5F5",
+            white: "#ffffff",
+          },
+          boxShadow: {
+            'card': '0 4px 8px rgba(0, 0, 0, 0.1)',
+            'hover-card': '0 10px 20px rgba(0, 0, 0, 0.15)'
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-background font-sans">
+
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-brand text-white flex flex-col shadow-lg transition-all duration-300 ease-in-out">
+      <div class="p-6">
+        <h2 class="text-2xl font-bold flex items-center gap-3">
+          <i class="fas fa-paw"></i> 
+          <span class="sidebar-text">Gestión de Mascotas</span>
+        </h2>
+      </div>
+
+      <nav class="flex-1 px-4">
+        <h3 class="text-sm font-semibold text-brand-light mb-3 sidebar-text">SECCIONES</h3>
+        <ul class="space-y-3">
+          <li>
+            <a href="./mascotas.html" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-white text-brand">
+              <i class="fas fa-dog w-5 text-center"></i> 
+              <span class="sidebar-text">Mascotas</span>
+            </a>
+          </li>
+          <li>
+            <a href="./propietarios.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-brand-dark/30 transition-all">
+              <i class="fas fa-user-friends w-5 text-center"></i> 
+              <span class="sidebar-text">Propietarios</span>
+            </a>
+          </li>
+          <li>
+            <a href="./citas.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-brand-dark/30 transition-all">
+              <i class="fas fa-calendar-alt w-5 text-center"></i> 
+              <span class="sidebar-text">Citas</span>
+            </a>
+          </li>
+          <li>
+            <a href="./historial.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-brand-dark/30 transition-all">
+              <i class="fas fa-notes-medical w-5 text-center"></i> 
+              <span class="sidebar-text">Historial Clínico</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="p-6 mt-auto">
+        <a href="/modules/veterinaria-admin/pages/core/dashboard.html"
+          class="w-full flex items-center gap-2 bg-white/10 hover:bg-white/20 text-sm px-4 py-3 rounded-lg transition-all">
+          <i class="fas fa-arrow-left"></i>
+          <span class="sidebar-text">Volver al Dashboard</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Contenido Principal -->
+    <main class="flex-1 overflow-auto p-8">
+      <!-- Botón para plegar/desplegar el sidebar (siempre visible) -->
+      <button id="toggle-sidebar" class="fixed top-4 left-4 z-50 p-2 bg-brand text-white rounded-lg shadow-lg">
+        <i class="fas fa-bars text-xl"></i>
+      </button>
+
+      <h1 class="text-3xl font-bold text-gray-800 mb-6">Mascotas Registradas</h1>
+
+      <!-- Formulario de Registro -->
+      <section class="bg-white p-6 rounded-xl shadow-card mb-8">
+        <h2 class="text-xl font-semibold text-gray-700 mb-4"><i class="fas fa-plus-circle mr-2"></i>Registrar Mascota</h2>
+
+        <form id="petForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <input type="hidden" id="petId">
+
+          <div>
+            <label class="block font-medium text-gray-700">Nombre</label>
+            <input type="text" id="petName" required class="w-full p-2 border rounded">
+          </div>
+
+          <div>
+            <label class="block font-medium text-gray-700">Especie</label>
+            <input type="text" id="petSpecies" required class="w-full p-2 border rounded">
+          </div>
+
+          <div>
+            <label class="block font-medium text-gray-700">Raza</label>
+            <input type="text" id="petBreed" class="w-full p-2 border rounded">
+          </div>
+
+          <div>
+            <label class="block font-medium text-gray-700">Edad</label>
+            <input type="number" id="petAge" class="w-full p-2 border rounded">
+          </div>
+
+          <div>
+            <label class="block font-medium text-gray-700">Propietario</label>
+            <input type="text" id="petOwner" class="w-full p-2 border rounded">
+          </div>
+
+          <div class="col-span-2 flex justify-end">
+            <button type="submit" class="bg-brand text-white px-6 py-2 rounded hover:bg-brand-dark transition font-semibold">
+              <i class="fas fa-save mr-1"></i>Guardar Mascota
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Lista de Mascotas -->
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-6" id="petsContainer"></section>
+    </main>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // Script para plegar/desplegar el sidebar
+    const sidebar = document.getElementById('sidebar');
+    const toggleButton = document.getElementById('toggle-sidebar');
+    const sidebarTexts = document.querySelectorAll('.sidebar-text');
+
+    toggleButton.addEventListener('click', () => {
+      sidebar.classList.toggle('w-64');
+      sidebar.classList.toggle('w-20');
+      sidebarTexts.forEach(text => text.classList.toggle('hidden'));
+    });
+
+    // Script para manejar las mascotas
+    const pets = JSON.parse(localStorage.getItem('pets')) || [
+      {id: 1, name: "Firulais", species: "Perro", breed: "Labrador", age: 5, owner: "Juan Pérez"},
+      {id: 2, name: "Mia", species: "Gato", breed: "Siames", age: 3, owner: "Ana López"}
+    ];
+
+    function renderPets() {
+      const container = document.getElementById('petsContainer');
+      container.innerHTML = "";
+      pets.forEach(pet => {
+        container.innerHTML += `
+          <div class="bg-white p-6 rounded-xl shadow-card hover:shadow-hover-card transition">
+            <h3 class="text-lg font-bold text-gray-800">${pet.name}</h3>
+            <p class="text-sm text-gray-600">${pet.species} - ${pet.breed}</p>
+            <p class="text-sm text-gray-600">Edad: ${pet.age} años</p>
+            <p class="text-sm text-gray-600">Propietario: ${pet.owner}</p>
+          </div>
+        `;
+      });
+      localStorage.setItem('pets', JSON.stringify(pets));
+    }
+
+    document.getElementById('petForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const pet = {
+        id: Date.now(),
+        name: document.getElementById('petName').value,
+        species: document.getElementById('petSpecies').value,
+        breed: document.getElementById('petBreed').value,
+        age: document.getElementById('petAge').value,
+        owner: document.getElementById('petOwner').value
+      };
+      pets.push(pet);
+      renderPets();
+      this.reset();
+    });
+
+    document.addEventListener("DOMContentLoaded", renderPets);
+  </script>
+</body>
+</html>

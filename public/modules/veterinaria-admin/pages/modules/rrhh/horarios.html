@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Horarios | Recursos Humanos</title>
+
+ <!-- Tailwind CSS -->
+ <script src="https://cdn.tailwindcss.com"></script>
+ <!-- FontAwesome para íconos -->
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+ <script>
+  tailwind.config = {
+   theme: {
+    extend: {
+     colors: {
+      brand: "#ff7f00",
+      light: "#ffae42",
+      dark: "#cc6600",
+      background: "#F5F5F5",
+      white: "#ffffff",
+     },
+     boxShadow: {
+      'card': '0 4px 8px rgba(0, 0, 0, 0.1)',
+      'hover-card': '0 10px 20px rgba(0, 0, 0, 0.15)'
+     }
+    }
+   }
+  };
+ </script>
+</head>
+
+<body class="bg-background font-sans">
+ <div class="flex h-screen">
+  <!-- Sidebar -->
+  <aside id="sidebar" class="w-64 bg-brand text-white flex flex-col shadow-lg">
+   <div class="p-6">
+    <h2 class="text-2xl font-bold flex items-center gap-3">
+     <i class="fas fa-calendar"></i>
+     <span>Gestión de Horarios</span>
+    </h2>
+   </div>
+   <nav class="flex-1 px-4">
+    <ul class="space-y-3">
+     <li><a href="./empleados.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-brand-dark/30"><i
+        class="fas fa-users w-5"></i> Empleados</a></li>
+     <li><a href="./horarios.html" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-white text-brand"><i
+        class="fas fa-calendar w-5"></i> Horarios</a></li>
+     <li><a href="./asistencia.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-brand-dark/30"><i
+        class="fas fa-clock w-5"></i> Control de Asistencia</a></li>
+     <li><a href="./evaluaciones.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-brand-dark/30"><i
+        class="fas fa-chart-line w-5"></i> Evaluaciones</a></li>
+    </ul>
+   </nav>
+   <div class="p-6 mt-auto">
+    <a href="/modules/veterinaria-admin/pages/core/dashboard.html" class="flex items-center gap-2 bg-white/10 hover:bg-white/20 px-4 py-3 rounded-lg">
+     <i class="fas fa-arrow-left"></i> Volver al Dashboard
+    </a>
+   </div>
+  </aside>
+
+  <!-- Contenido Principal -->
+  <main class="flex-1 overflow-auto p-8">
+   <h1 class="text-3xl font-bold text-gray-800 mb-6">Gestión de Horarios</h1>
+
+   <!-- Registro de horarios -->
+   <section class="bg-white p-6 rounded-xl shadow-card mb-8">
+    <h2 class="text-xl font-semibold text-gray-700 mb-4"><i class="fas fa-plus-circle mr-2"></i> Registrar Horario</h2>
+    <form id="scheduleForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+     <input type="hidden" id="editIndex">
+     <div>
+      <label class="block font-medium text-gray-700">Día</label>
+      <select id="scheduleDay" required class="w-full p-2 border rounded focus:ring-2 focus:ring-brand">
+       <option value="Lunes">Lunes</option>
+       <option value="Martes">Martes</option>
+       <option value="Miércoles">Miércoles</option>
+       <option value="Jueves">Jueves</option>
+       <option value="Viernes">Viernes</option>
+      </select>
+     </div>
+     <div>
+      <label class="block font-medium text-gray-700">Turno</label>
+      <select id="scheduleShift" required class="w-full p-2 border rounded focus:ring-2 focus:ring-brand">
+       <option value="Mañana">Mañana</option>
+       <option value="Tarde">Tarde</option>
+       <option value="Noche">Noche</option>
+      </select>
+     </div>
+     <div>
+      <label class="block font-medium text-gray-700">Empleado</label>
+      <input type="text" id="scheduleEmployee" required class="w-full p-2 border rounded focus:ring-2 focus:ring-brand">
+     </div>
+     <div class="col-span-2 lg:col-span-3 flex justify-end">
+      <button type="submit" class="bg-brand text-white px-6 py-2 rounded hover:bg-brand-dark transition font-semibold">
+       <i class="fas fa-save mr-1"></i> Guardar Horario
+      </button>
+     </div>
+    </form>
+   </section>
+
+   <!-- Lista de horarios -->
+   <section class="bg-white p-6 rounded-xl shadow-card">
+    <h2 class="text-xl font-semibold text-gray-700 mb-4"><i class="fas fa-list mr-2"></i> Lista de Horarios</h2>
+    <div id="scheduleList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+   </section>
+  </main>
+ </div>
+
+ <script>
+  let schedules = JSON.parse(localStorage.getItem("schedules")) || [];
+
+  function renderSchedules() {
+   const container = document.getElementById("scheduleList");
+   container.innerHTML = "";
+   schedules.forEach((schedule, index) => {
+    container.innerHTML += `
+          <div class="bg-light p-4 rounded-lg shadow flex justify-between items-center">
+            <h3 class="text-lg font-semibold">${schedule.day} - ${schedule.shift} (${schedule.employee})</h3>
+            <div>
+              <button onclick="editSchedule(${index})" class="text-brand mr-2"><i class="fas fa-edit"></i></button>
+              <button onclick="deleteSchedule(${index})" class="text-danger"><i class="fas fa-trash"></i></button>
+            </div>
+          </div>
+        `;
+   });
+   localStorage.setItem("schedules", JSON.stringify(schedules));
+  }
+
+  document.getElementById("scheduleForm").addEventListener("submit", function (event) {
+   event.preventDefault();
+   const editIndex = document.getElementById("editIndex").value;
+   const schedule = {
+    day: document.getElementById("scheduleDay").value,
+    shift: document.getElementById("scheduleShift").value,
+    employee: document.getElementById("scheduleEmployee").value
+   };
+   if (editIndex === "") {
+    schedules.push(schedule);
+   } else {
+    schedules[editIndex] = schedule;
+    document.getElementById("editIndex").value = "";
+   }
+   renderSchedules();
+   this.reset();
+  });
+
+  function deleteSchedule(index) {
+   schedules.splice(index, 1);
+   renderSchedules();
+  }
+
+  function editSchedule(index) {
+   document.getElementById("scheduleDay").value = schedules[index].day;
+   document.getElementById("scheduleShift").value = schedules[index].shift;
+   document.getElementById("scheduleEmployee").value = schedules[index].employee;
+   document.getElementById("editIndex").value = index;
+  }
+
+  document.addEventListener("DOMContentLoaded", renderSchedules);
+ </script>
+</body>
+
+</html>

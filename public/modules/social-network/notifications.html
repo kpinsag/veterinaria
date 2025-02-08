@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Notificaciones</title>
+ <script src="https://cdn.tailwindcss.com"></script>
+ <style>
+  :root {
+   --peach: #fdf8f5;
+   /* Durazno */
+   --orange: #FF8C42;
+   /* Naranja */
+   --darkOrange: #E76F24;
+   /* Naranja oscuro */
+   --blue: #4D85D9;
+   /* Azul para notificaciones */
+   --green: #5CB85C;
+   /* Verde para éxito */
+   --red: #D9534F;
+   /* Rojo para error */
+  }
+
+  body {
+   background-color: var(--peach);
+   font-family: 'Arial', sans-serif;
+  }
+
+  /* Contenedor principal de las notificaciones */
+  .notification-container {
+   position: fixed;
+   bottom: 20px;
+   left: 50%;
+   transform: translateX(-50%);
+   max-width: 400px;
+   width: 100%;
+   z-index: 1000;
+  }
+
+  .notification {
+   display: flex;
+   align-items: center;
+   background-color: white;
+   padding: 15px;
+   margin-bottom: 10px;
+   border-radius: 8px;
+   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+   opacity: 0;
+   animation: fadeIn 0.5s forwards;
+  }
+
+  /* Animación de aparición */
+  @keyframes fadeIn {
+   0% {
+    opacity: 0;
+    transform: translateY(10px);
+   }
+
+   100% {
+    opacity: 1;
+    transform: translateY(0);
+   }
+  }
+
+  .notification .icon {
+   font-size: 20px;
+   margin-right: 15px;
+  }
+
+  .notification .message {
+   flex-grow: 1;
+   font-size: 14px;
+  }
+
+  .notification .close-btn {
+   background: none;
+   border: none;
+   color: #666;
+   font-size: 20px;
+   cursor: pointer;
+   transition: color 0.3s;
+  }
+
+  .notification .close-btn:hover {
+   color: #333;
+  }
+
+  /* Estilos para tipos de notificación */
+  .notification-info {
+   background-color: var(--blue);
+   color: white;
+  }
+
+  .notification-success {
+   background-color: var(--green);
+   color: white;
+  }
+
+  .notification-error {
+   background-color: var(--red);
+   color: white;
+  }
+
+  .notification-warning {
+   background-color: var(--orange);
+   color: white;
+  }
+ </style>
+</head>
+
+<body>
+
+ <!-- Contenedor de notificaciones -->
+ <div id="notification-container" class="notification-container"></div>
+
+ <script>
+  // Función para crear y mostrar una notificación
+  function showNotification(message, type) {
+   const notificationContainer = document.getElementById('notification-container');
+
+   // Crear la notificación
+   const notification = document.createElement('div');
+   notification.classList.add('notification');
+
+   // Establecer el tipo de notificación
+   switch (type) {
+    case 'info':
+     notification.classList.add('notification-info');
+     notification.innerHTML = `<span class="icon">ℹ️</span><span class="message">${message}</span><button class="close-btn" onclick="closeNotification(this)">✖️</button>`;
+     break;
+    case 'success':
+     notification.classList.add('notification-success');
+     notification.innerHTML = `<span class="icon">✅</span><span class="message">${message}</span><button class="close-btn" onclick="closeNotification(this)">✖️</button>`;
+     break;
+    case 'error':
+     notification.classList.add('notification-error');
+     notification.innerHTML = `<span class="icon">❌</span><span class="message">${message}</span><button class="close-btn" onclick="closeNotification(this)">✖️</button>`;
+     break;
+    case 'warning':
+     notification.classList.add('notification-warning');
+     notification.innerHTML = `<span class="icon">⚠️</span><span class="message">${message}</span><button class="close-btn" onclick="closeNotification(this)">✖️</button>`;
+     break;
+    default:
+     notification.classList.add('notification-info');
+     notification.innerHTML = `<span class="icon">ℹ️</span><span class="message">${message}</span><button class="close-btn" onclick="closeNotification(this)">✖️</button>`;
+     break;
+   }
+
+   // Añadir la notificación al contenedor
+   notificationContainer.appendChild(notification);
+
+   // Después de 5 segundos, se elimina la notificación
+   setTimeout(() => {
+    closeNotification(notification);
+   }, 5000);
+  }
+
+  // Función para cerrar una notificación
+  function closeNotification(notificationElement) {
+   notificationElement.style.opacity = '0';
+   setTimeout(() => {
+    notificationElement.remove();
+   }, 500);
+  }
+
+  // Mostrar notificaciones de prueba (puedes llamar esta función según lo necesites)
+  showNotification("¡Tu perfil ha sido actualizado correctamente!", "success");
+  showNotification("Hay un nuevo mensaje en tu bandeja de entrada.", "info");
+  showNotification("Algo salió mal al guardar los datos.", "error");
+  showNotification("¡Cuidado! El sistema necesita mantenimiento.", "warning");
+ </script>
+
+</body>
+
+</html>
