@@ -42,7 +42,7 @@ app.get("*", (req, res) => {
     });
 });
 
-// ✅ 9️⃣ Iniciar el servidor
+// ✅ 9️⃣ Iniciar el servido
 app.listen(PORT, () => {
     console.log(`🚀 Servidor ejecutándose en http://localhost:${PORT}`);
 });
